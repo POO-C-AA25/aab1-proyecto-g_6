@@ -30,7 +30,7 @@ public class Estadistica {
         this.eventoMenorAsistencia = eventoMenorAsistencia;
     }
 
-    public void calcularEstadisticas(ArrayList<Visitante> visitantes, ArrayList<Evento> eventos) {
+    public void calcularEstadisticas(ArrayList<Visitante> acumulacionVisitantes, ArrayList<Evento> eventosPresentables) {
         this.totalVisitantes = 0;
         this.totalPersonasDiscapacitadas = 0;
         this.ingresosTotales = 0;
@@ -39,7 +39,7 @@ public class Estadistica {
             this.asistenciaPorDia[i] = 0;
         }
 
-        for (Visitante v : visitantes) {
+        for (Visitante v : acumulacionVisitantes) {
             this.totalVisitantes += v.cantidadTotalEntradas;
             if (v.discapacidad) {
                 this.totalPersonasDiscapacitadas++;
@@ -48,7 +48,7 @@ public class Estadistica {
             this.ingresosTotales += v.totalPagar;
         }
 
-        for (Evento e : eventos) {
+        for (Evento e : eventosPresentables) {
             int dia = Integer.parseInt(e.diaPresentacion);
             int idx = dia - 30;
             if (idx >= 0 && idx < asistenciaPorDia.length) {
@@ -57,11 +57,11 @@ public class Estadistica {
         }
 
         //Se comprueba si esta vacia con ayuda de .isEmpty que sirve pues para ver si esta vacia
-        if (!eventos.isEmpty()) {
-            this.eventoMayorAsistencia = eventos.get(0);
-            this.eventoMenorAsistencia = eventos.get(0);
+        if (!eventosPresentables.isEmpty()) {
+            this.eventoMayorAsistencia = eventosPresentables.get(0);
+            this.eventoMenorAsistencia = eventosPresentables.get(0);
 
-            for (Evento e : eventos) {
+            for (Evento e : eventosPresentables) {
                 if (e.cantidadVisitantes > this.eventoMayorAsistencia.cantidadVisitantes) {
                     this.eventoMayorAsistencia = e;
                 }
@@ -73,7 +73,7 @@ public class Estadistica {
     }
 
     //Metodo para imprimir la estadistica directamente en la terminal
-    public void imprimirEstadistica(ArrayList<Evento> eventos, int[] asistenciaPorDia) {
+    public void imprimirEstadistica(ArrayList<Evento> eventosPresentables, int[] asistenciaPorDia) {
         System.out.println("===== Estadísticas de la Feria =====");
         System.out.println("Total visitantes: " + totalVisitantes);
         System.out.println("Personas con discapacidad: " + totalPersonasDiscapacitadas);
@@ -81,7 +81,7 @@ public class Estadistica {
         System.out.println("Descuentos totales: $" + descuentosTotales);
 
         // Actualiza asistencia diaria sumando visitantes por evento
-        for (Evento evento : eventos) {
+        for (Evento evento : eventosPresentables) {
             int diaEvento = Integer.parseInt(evento.diaPresentacion); // Día del evento
             int indiceDia = diaEvento - 30; // Índice en asistenciaPorDia (día 30 es índice 0)
             if (indiceDia >= 0 && indiceDia < asistenciaPorDia.length) {
@@ -108,7 +108,7 @@ public class Estadistica {
     }
 
     //Metodo para guardar la estadistica en un archivo CSV
-    public void guardarEstadistica(String nombreArchivo, ArrayList<Evento> eventos, int[] asistenciaPorDia) {
+    public void guardarEstadistica(String nombreArchivo, ArrayList<Evento> eventosPresentables, int[] asistenciaPorDia) {
         try (FileWriter escritor = new FileWriter(nombreArchivo)) {
 
             escritor.write("=== Estadísticas Generales ===\n");
@@ -124,7 +124,7 @@ public class Estadistica {
             }
 
             escritor.write("\n=== Eventos ===\n");
-            for (Evento evento : eventos) {
+            for (Evento evento : eventosPresentables) {
                 escritor.write(evento.nombreArtista + "," + evento.diaPresentacion + "," + evento.cantidadVisitantes + "\n");
             }
 
