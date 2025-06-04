@@ -1,10 +1,11 @@
 package Vista;
 
 
-//Librerias para el manejo de archivos
-//No vi la necesidad de guardar los objetos entonces decidi no ocupar serializacion de objetos
+//Importaciones de los otros java class 
 import Modelo.Visitante;
 import Modelo.Evento;
+
+//Librerias para el manejo de archivos
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,25 +34,34 @@ public class Estadistica {
         this.eventoMayorAsistencia = eventoMayorAsistencia;
         this.eventoMenorAsistencia = eventoMenorAsistencia;
     }
-
+    
+    //Metodo para calcular la estadistica
     public void calcularEstadisticas(ArrayList<Visitante> acumulacionVisitantes, ArrayList<Evento> eventosPresentables) {
+        //Nos aseguramos que los datos a calcular comiencen con valor 0
         this.totalVisitantes = 0;
         this.totalPersonasDiscapacitadas = 0;
         this.ingresosTotales = 0;
         this.descuentosTotales = 0;
+        
+        
         for (int i = 0; i < this.asistenciaPorDia.length; i++) {
             this.asistenciaPorDia[i] = 0;
         }
-
+        
+        //Se recorre el arrayList con los datos de los visitantes para sumar todos y obtener la estadistica
         for (Visitante v : acumulacionVisitantes) {
+            //Se toma la cantidad de entradas como el total de visitantes en la feria
             this.totalVisitantes += v.cantidadTotalEntradas;
-            if (v.discapacidad) {
+            
+            //Se cuenta la cantidad de personas discapacitadas
+            if (v.discapacidad == true) {
                 this.totalPersonasDiscapacitadas++;
+                //Se suma los descuentos aplicados
                 this.descuentosTotales += v.descuentoAplicado;
             }
             this.ingresosTotales += v.totalPagar;
         }
-
+        //Se recorre el arreyList de los eventos para encontrar las asistencias por dia 
         for (Evento e : eventosPresentables) {
             int dia = Integer.parseInt(e.diaPresentacion);
             int idx = dia - 30;
@@ -78,7 +88,7 @@ public class Estadistica {
 
     //Metodo para imprimir la estadistica directamente en la terminal
     public void imprimirEstadistica(ArrayList<Evento> eventosPresentables, int[] asistenciaPorDia) {
-        System.out.println("===== Estadísticas de la Feria =====");
+        System.out.println("========== Estadísticas de la Feria ==========");
         System.out.println("Total visitantes: " + totalVisitantes);
         System.out.println("Personas con discapacidad: " + totalPersonasDiscapacitadas);
         System.out.println("Ingresos totales: $" + ingresosTotales);
@@ -114,25 +124,27 @@ public class Estadistica {
     //Metodo para guardar la estadistica en un archivo CSV
     public void guardarEstadistica(String nombreArchivo, ArrayList<Evento> eventosPresentables, int[] asistenciaPorDia) {
         try (FileWriter escritor = new FileWriter(nombreArchivo)) {
-
-            escritor.write("=== Estadísticas Generales ===\n");
+            
+            //Se escriben los datos en el archivo con el .write 
+            escritor.write("======== Estadísticas Generales ========\n");
             escritor.write("Total visitantes," + totalVisitantes + "\n");
             escritor.write("Personas con discapacidad," + totalPersonasDiscapacitadas + "\n");
             escritor.write("Ingresos totales," + ingresosTotales + "\n");
             escritor.write("Descuentos totales," + descuentosTotales + "\n\n");
 
-            escritor.write("=== Asistencia por Día ===\n");
+            escritor.write("======== Asistencia por Día ========\n");
+            //Se recorren las listas para obtener los demas datos a ingresar en el archivo
             for (int i = 0; i < asistenciaPorDia.length; i++) {
                 int dia = 30 + i;
                 escritor.write("Día " + dia + "," + asistenciaPorDia[i] + "\n");
             }
-
-            escritor.write("\n=== Eventos ===\n");
+            
+            escritor.write("\n======== Eventos ========\n");
             for (Evento evento : eventosPresentables) {
                 escritor.write(evento.nombreArtista + "," + evento.diaPresentacion + "," + evento.cantidadVisitantes + "\n");
             }
 
-            escritor.write("\n=== Eventos con Mayor y Menor Asistencia ===\n");
+            escritor.write("\n======== Eventos con Mayor y Menor Asistencia ========\n");
             if (eventoMayorAsistencia != null) {
                 escritor.write("Mayor asistencia," + eventoMayorAsistencia.nombreArtista + "," + eventoMayorAsistencia.cantidadVisitantes + "\n");
             }
@@ -141,10 +153,10 @@ public class Estadistica {
             }
 
             System.out.println("Estadísticas guardadas correctamente en " + nombreArchivo);
-
-        } catch (IOException e) {
+        
+        //En caso exista un error en el archivo  
+        } catch (IOException ex) {
             System.out.println("Error al guardar el archivo CSV");
         }
     }
-
 }
