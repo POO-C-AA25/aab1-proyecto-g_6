@@ -1,3 +1,12 @@
+package Controlador;
+
+//Importaciones de los archivos java, que se encuentran en diferentes paquetes del proyecto
+import Modelo.Visitante;
+import Modelo.Evento;
+import Modelo.Entrada;
+
+
+import Vista.Estadistica;
 import java.time.LocalDateTime; //Extrae la hora y fecha
 import java.util.*; //Para el arrayList y el Scanner 
 public class EjecutorSistemaFeria {

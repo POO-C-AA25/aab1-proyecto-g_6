@@ -1,6 +1,10 @@
+package Vista;
+
 
 //Librerias para el manejo de archivos
 //No vi la necesidad de guardar los objetos entonces decidi no ocupar serializacion de objetos
+import Modelo.Visitante;
+import Modelo.Evento;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;

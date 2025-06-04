@@ -1,3 +1,5 @@
+package Modelo;
+
 
 import java.time.DayOfWeek; //Esta libreria sirve para verificar los dias de la semana
 import java.time.LocalDate; //Extrae la fecha (Solo dias no horas, esto se cambio con respecto al UML)
